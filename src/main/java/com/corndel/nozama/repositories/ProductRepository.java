@@ -57,12 +57,25 @@ public class ProductRepository {
 
     }
 
-    public Product filterByCategory() throws SQLException{
-        String query = String.format("SELECT * FROM PRODUCTS");
+    public static ArrayList<Product> filterByCategory(String category_name) throws SQLException{
+        String query = String.format("SELECT * FROM PRODUCTS WHERE CATEGORIES.name = %s INNER JOIN PRODUCT_CATEGORIES ON PRODUCTS.id = PRODUCT_CATEGORIES.productId INNER JOIN PRODUCT_CATEGORIES ON CATEGORIES.id = PRODUCT_CATEGORIES.categoryId",category_name);
         try (var con = DB.getConnection();
              var stmt = con.createStatement();
              var rs = stmt.executeQuery(query)) {
-            return null;
+
+            var products = new ArrayList<Product>();
+            while (rs.next()) {
+                var id = rs.getInt("id");
+                var name = rs.getString("name");
+                var description = rs.getString("description");
+                var price = rs.getFloat("price");
+                var stockQuantity = rs.getInt("stockQuantity");
+                var imageURL = rs.getString("imageURL");
+
+                products.add(new Product(id, name, description, price, stockQuantity, imageURL));
+            }
+
+            return products;
         }
     }
 
