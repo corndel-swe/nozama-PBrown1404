@@ -36,19 +36,16 @@ public class ProductRepository {
              var stmt = con.createStatement();
              var rs = stmt.executeQuery(query)) {
 
-            while (rs.next()) {
+
                 var name = rs.getString("name");
                 var description = rs.getString("description");
                 var price = rs.getFloat("price");
                 var stockQuantity = rs.getInt("stockQuantity");
                 var imageURL = rs.getString("imageURL");
 
-                var product = new Product(id, name, description, price, stockQuantity, imageURL);
-                return product;
-            }
+            return new Product(id, name, description, price, stockQuantity, imageURL);
 
         }
-        return null;
     }
 
 }
