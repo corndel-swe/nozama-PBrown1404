@@ -29,7 +29,7 @@ public class App {
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
     app.get(
-            "/",
+            "/products",
             ctx -> {
                 var product = ProductRepository.findAll();
                 ctx.json(product);
