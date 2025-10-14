@@ -27,6 +27,17 @@ public class App {
           var user = UserRepository.findById(id);
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
+//    app.get(
+//            "/products/",
+//            ctx -> {
+//                var id = Integer.parseInt(ctx.queryParam("id"));
+//                var name = ctx.queryParam("name");
+//                var description = ctx.queryParam("description");
+//                var price = ctx.queryParam("price");
+//                var stockQuantity = Integer.parseInt(ctx.queryParam("stockQuantity"));
+//                var imageURL = ctx.queryParam("imageURL");
+//                ctx.status(HttpStatus.ACCEPTED)
+//            });
   }
 
   public Javalin javalinApp() {

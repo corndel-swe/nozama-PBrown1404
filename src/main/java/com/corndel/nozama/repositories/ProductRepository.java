@@ -51,4 +51,13 @@ public class ProductRepository {
         return null;
     }
 
+    public Product createNewProduct(Integer id, String name, String description, Float price, Integer stockQuantity, String imageURL) throws SQLException {
+        String query = String.format("INSERT INTO PRODUCTS VALUES(%d, %2s, %3s, %4s, %5d, %6s)",id,name,description,price,stockQuantity,imageURL);
+        try (var con = DB.getConnection();
+             var stmt = con.createStatement();
+             var rs = stmt.executeQuery(query)) {
+            return null;
+        }
+    }
+
 }
