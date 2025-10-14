@@ -29,10 +29,10 @@ public class App {
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
     app.get(
-            "/products/{category_name}",
+            "/products/{name}",
             ctx -> {
-                var category_name = ctx.pathParam("category_name");
-                var product = ProductRepository.filterByCategory(category_name);
+                var name = ctx.pathParam("name");
+                var product = ProductRepository.filterByCategory(name);
                 ctx.json(product);
             });
   }
