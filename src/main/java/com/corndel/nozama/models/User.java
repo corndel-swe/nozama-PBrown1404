@@ -4,6 +4,7 @@ import com.corndel.nozama.DB;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class User {
     private Integer id;
@@ -68,11 +69,11 @@ public class User {
 
 
     public static ResultSet deleteUser(Integer id) throws SQLException {
-        var query = "DELETE FROM users WHERE id = " + id;
-        try (var connection = DB.getConnection();
-             var statement = connection.createStatement();
-             var rs = statement.executeQuery(query);
-        ) {
+        var query = "DELETE FROM users WHERE id = ?";
+        try (var connection = DB.getConnection(); var statement = connection.prepareStatement(query);) {
+
+            statement.setInt(1, id);
+            var rs = statement.executeQuery();
             System.out.println(rs);
             return rs;
         }
@@ -80,11 +81,18 @@ public class User {
     }
 
     public static User createUser(String username, String firstName, String lastName, String email, String avatar) throws SQLException {
-        var query = "INSERT INTO users(username, firstName, lastName, email, avatar),VALUES(" + username + "," + firstName + "," + lastName + "," + email + "," + avatar + ");";
-        try (var connection = DB.getConnection();
-             var statement = connection.createStatement();
-             var rs = statement.executeQuery(query);
+        var query = "INSERT INTO users(username, firstName, lastName, email, avatar),VALUES(?,?,?,?,?)";
+
+        try (var connection = DB.getConnection(); var statement = connection.prepareStatement(query);
+
         ) {
+            statement.setString(1, username);
+            statement.setString(2, firstName);
+            statement.setString(3, lastName);
+            statement.setString(4, email);
+            statement.setString(5, avatar);
+            var rs = statement.executeQuery();
+
             System.out.println(rs);
             while (rs.next()) {
                 var id = rs.getInt("id");
@@ -101,4 +109,35 @@ public class User {
         System.out.println("Arthur may or may not of written broken code");
         return null;
     }
+
+    public static Boolean loginUser(String username, String password) throws SQLException {
+
+        var query = String.format("SELECT username, password FROM users WHERE username = ?");
+        try (var connection = DB.getConnection(); var statement = connection.prepareStatement(query);
+
+        ) {
+            statement.setString(1, username);
+            var rs = statement.executeQuery();
+
+            System.out.println("DB made connection");
+            String dbUsername = rs.getString("username");
+
+            String dbPassword = rs.getString("password");
+
+            if (Objects.equals(username, dbUsername) && Objects.equals(password, dbPassword)) {
+                System.out.println("User logged in successfully");
+                return true;
+            }
+            System.out.println(String.format("Mismatch between username: %s, and %2s", username, dbUsername));
+
+            System.out.println(String.format("Mismatch between pwd: %s, and %2s", password, dbPassword));
+
+        }
+        System.out.println("Sorry, we couldn't log you in");
+        return false;
+    }
+
+
+
+
 }

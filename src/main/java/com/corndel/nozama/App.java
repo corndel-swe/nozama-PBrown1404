@@ -1,35 +1,50 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
 
 public class App {
-  private Javalin app;
+    public record UserLogin(String username, String password) {
+    }
 
-  public static void main(String[] args) {
-    var app = new App().javalinApp();
-    app.start(8080);
-  }
+    private Javalin app;
 
-  public App() {
-    app = Javalin.create();
-    app.get(
-        "/",
-        ctx -> {
-          var users = UserRepository.findAll();
-          ctx.json(users);
+    public static void main(String[] args) {
+        var app = new App().javalinApp();
+        app.start(8080);
+    }
+
+    public App() {
+        app = Javalin.create();
+        app.get("/", ctx -> {
+            var users = UserRepository.findAll();
+            ctx.json(users);
         });
-    app.get(
-        "/users/{userId}",
-        ctx -> {
-          var id = Integer.parseInt(ctx.pathParam("userId"));
-          var user = UserRepository.findById(id);
-          ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
+        app.get("/users/{userId}", ctx -> {
+            var id = Integer.parseInt(ctx.pathParam("userId"));
+            var user = UserRepository.findById(id);
+            ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
-  }
+        app.post("/users/login", ctx -> {
+            UserLogin body = ctx.bodyAsClass(UserLogin.class);
 
-  public Javalin javalinApp() {
-    return app;
-  }
+            var login = User.loginUser(body.username, body.password);
+            ctx.status(201);
+            ctx.json(login);
+        });
+        app.post("/users", ctx -> {
+            System.out.println("HEHEHEHEHE");
+            User body = ctx.bodyAsClass(User.class);
+            System.out.println(body);
+            User user = User.createUser(body.getUsername(), body.getFirstName(), body.getLastName(), body.getEmail(), body.getAvatar());
+            ctx.status(201);
+            ctx.json(user);
+        });
+    }
+
+    public Javalin javalinApp() {
+        return app;
+    }
 }
