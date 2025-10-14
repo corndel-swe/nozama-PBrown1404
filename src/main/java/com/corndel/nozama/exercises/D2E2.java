@@ -20,15 +20,29 @@ public class D2E2 {
     app.get(
         "/sumup",
         ctx -> {
-          // TODO:
+            var n = Integer.parseInt(ctx.queryParam("n"));
+            if (n == 0 || ctx.queryParam("n") == null)
+            {
+                ctx.result("0");
+            }
+            else {
+                var sum = (n * (n + 1)) / 2;
+                ctx.result(String.valueOf(sum));
+            }
         });
 
     app.get(
         "/multiply/{x}/{y}",
         ctx -> {
-          // TODO
+            var x = Integer.parseInt(ctx.pathParam("x"));
+            var y = Integer.parseInt(ctx.pathParam("y"));
+            ctx.result(String.valueOf(x * y));
         });
 
     return app;
   }
+
+    public static void main(String[] args) {
+        createApp().start(8080);
+    }
 }

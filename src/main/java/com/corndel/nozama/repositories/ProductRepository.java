@@ -36,19 +36,34 @@ public class ProductRepository {
              var stmt = con.createStatement();
              var rs = stmt.executeQuery(query)) {
 
-            while (rs.next()) {
-                var name = rs.getString("name");
-                var description = rs.getString("description");
-                var price = rs.getFloat("price");
-                var stockQuantity = rs.getInt("stockQuantity");
-                var imageURL = rs.getString("imageURL");
+            var name = rs.getString("name");
+            var description = rs.getString("description");
+            var price = rs.getFloat("price");
+            var stockQuantity = rs.getInt("stockQuantity");
+            var imageURL = rs.getString("imageURL");
 
-                var product = new Product(id, name, description, price, stockQuantity, imageURL);
-                return product;
-            }
+            return new Product(id, name, description, price, stockQuantity, imageURL);
 
         }
-        return null;
+    }
+
+    public Product createNewProduct(Integer id, String name, String description, Float price, Integer stockQuantity, String imageURL) throws SQLException {
+        String query = String.format("INSERT INTO PRODUCTS VALUES(%d, %2s, %3s, %4s, %5d, %6s)",id,name,description,price,stockQuantity,imageURL);
+        try (var con = DB.getConnection();
+             var stmt = con.createStatement();
+             var rs = stmt.executeQuery(query)) {
+            return null;
+        }
+
+    }
+
+    public Product filterByCategory() throws SQLException{
+        String query = String.format("SELECT * FROM PRODUCTS");
+        try (var con = DB.getConnection();
+             var stmt = con.createStatement();
+             var rs = stmt.executeQuery(query)) {
+            return null;
+        }
     }
 
 }
