@@ -5,6 +5,8 @@ import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
 
+import java.sql.ResultSet;
+
 public class App {
     public record UserLogin(String username, String password) {
     }
@@ -29,7 +31,13 @@ public class App {
         });
         app.post("/users/{userId}", ctx -> {
             var id = Integer.parseInt(ctx.pathParam("userId"));
-            User user = User.deleteUser(id);
+            Integer res = User.deleteUser(id);
+            if (res > 0) {
+                System.out.println("Deleted user at id:" + id);
+            } else {
+                System.out.println("Failed to delete user");
+            }
+            ctx.json(res);
         });
         app.post("/users/login", ctx -> {
             UserLogin body = ctx.bodyAsClass(UserLogin.class);

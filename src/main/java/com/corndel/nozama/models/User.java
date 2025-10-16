@@ -101,14 +101,14 @@ public class User {
     }
 
 
-    public static User deleteUser(Integer id) throws SQLException {
+    public static Integer deleteUser(Integer id) throws SQLException {
         var query = "DELETE FROM users WHERE id = ?";
         try (var connection = DB.getConnection(); var statement = connection.prepareStatement(query);) {
 
             statement.setInt(1, id);
-            var rs = statement.executeQuery();
+            Integer rs = statement.executeUpdate();
             System.out.println(rs);
-            return null;
+            return rs;
         }
     }
 
