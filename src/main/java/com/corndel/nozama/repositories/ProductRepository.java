@@ -3,6 +3,9 @@ package com.corndel.nozama.repositories;
 import com.corndel.nozama.DB;
 import com.corndel.nozama.models.Product;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,11 +61,13 @@ public class ProductRepository {
     }
 
     public static ArrayList<Product> filterByCategory(String categoryId) throws SQLException{
-        String query = String.format("SELECT * FROM PRODUCTS WHERE CATEGORIES.id = %s INNER JOIN PRODUCT_CATEGORIES ON PRODUCTS.id = PRODUCT_CATEGORIES.productId INNER JOIN PRODUCT_CATEGORIES ON CATEGORIES.id = PRODUCT_CATEGORIES.categoryId",categoryId);
-        try (var con = DB.getConnection();
-             var stmt = con.createStatement();
-             var rs = stmt.executeQuery(query)) {
+        try ( Connection con = DB.getConnection();
+              var query = con.prepareStatement("SELECT PRODUCTS.id,PRODUCTS.name,PRODUCTS.description,PRODUCTS.price,PRODUCTS.stockQuantity,PRODUCTS.imageURL FROM PRODUCTS INNER JOIN PRODUCT_CATEGORIES ON PRODUCTS.id = PRODUCT_CATEGORIES.productId INNER JOIN CATEGORIES ON CATEGORIES.id = PRODUCT_CATEGORIES.categoryId WHERE CATEGORIES.id = ?"))
 
+        {
+            query.setString(1,categoryId);
+
+            ResultSet rs = query.executeQuery();
             var products = new ArrayList<Product>();
             while (rs.next()) {
                 var id = rs.getInt("id");
@@ -74,7 +79,6 @@ public class ProductRepository {
 
                 products.add(new Product(id, name, description, price, stockQuantity, imageURL));
             }
-
             return products;
         }
     }
