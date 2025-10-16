@@ -57,8 +57,8 @@ public class ProductRepository {
 
     }
 
-    public static ArrayList<Product> filterByCategory(String category_name) throws SQLException{
-        String query = String.format("SELECT * FROM PRODUCTS WHERE CATEGORIES.name = %s INNER JOIN PRODUCT_CATEGORIES ON PRODUCTS.id = PRODUCT_CATEGORIES.productId INNER JOIN PRODUCT_CATEGORIES ON CATEGORIES.id = PRODUCT_CATEGORIES.categoryId",category_name);
+    public static ArrayList<Product> filterByCategory(String categoryId) throws SQLException{
+        String query = String.format("SELECT * FROM PRODUCTS WHERE CATEGORIES.id = %s INNER JOIN PRODUCT_CATEGORIES ON PRODUCTS.id = PRODUCT_CATEGORIES.productId INNER JOIN PRODUCT_CATEGORIES ON CATEGORIES.id = PRODUCT_CATEGORIES.categoryId",categoryId);
         try (var con = DB.getConnection();
              var stmt = con.createStatement();
              var rs = stmt.executeQuery(query)) {
