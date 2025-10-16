@@ -27,6 +27,10 @@ public class App {
             var user = UserRepository.findById(id);
             ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
+        app.post("/users/{userId}", ctx -> {
+            var id = Integer.parseInt(ctx.pathParam("userId"));
+            User user = User.deleteUser(id);
+        });
         app.post("/users/login", ctx -> {
             UserLogin body = ctx.bodyAsClass(UserLogin.class);
 
@@ -35,12 +39,16 @@ public class App {
             ctx.json(login);
         });
         app.post("/users", ctx -> {
-            System.out.println("HEHEHEHEHE");
             User body = ctx.bodyAsClass(User.class);
             System.out.println(body);
-            User user = User.createUser(body.getUsername(), body.getFirstName(), body.getLastName(), body.getEmail(), body.getAvatar());
+            Integer changes = User.createUser(body.getUsername(), body.getPassword(), body.getFirstName(), body.getLastName(), body.getEmail(), body.getAvatar());
             ctx.status(201);
-            ctx.json(user);
+            if (changes > 0) {
+                ctx.json("Success, user added");
+            } else {
+                ctx.json("No changes made");
+            }
+
         });
     }
 

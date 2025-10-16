@@ -1,27 +1,51 @@
 package com.corndel.nozama.models;
 
 import com.corndel.nozama.DB;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
 public class User {
+
     private Integer id;
+
     private String username;
+
+    private String password;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String avatar;
 
-    public User(Integer id, String username, String firstName, String lastName, String email, String avatar) {
+    public User() {
+    }
+
+    public User(Integer id, String username, String password, String firstName, String lastName, String email, String avatar) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.avatar = avatar;
     }
+
+    public User(Integer id, String username, String firstName, String lastName, String email, String avatar) {
+        this.id = id;
+        this.username = username;
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.avatar = avatar;
+    }
+
 
     public Integer getId() {
         return id;
@@ -33,6 +57,15 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    //set password (don't create getter)
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getFirstName() {
@@ -68,46 +101,38 @@ public class User {
     }
 
 
-    public static ResultSet deleteUser(Integer id) throws SQLException {
+    public static User deleteUser(Integer id) throws SQLException {
         var query = "DELETE FROM users WHERE id = ?";
         try (var connection = DB.getConnection(); var statement = connection.prepareStatement(query);) {
 
             statement.setInt(1, id);
             var rs = statement.executeQuery();
             System.out.println(rs);
-            return rs;
+            return null;
         }
-
     }
 
-    public static User createUser(String username, String firstName, String lastName, String email, String avatar) throws SQLException {
-        var query = "INSERT INTO users(username, firstName, lastName, email, avatar),VALUES(?,?,?,?,?)";
+    public static Integer createUser(String username, String password, String firstName, String lastName, String email, String avatar) throws SQLException {
+        var query = "INSERT INTO users(username, password, firstName, lastName, email, avatar) VALUES(?,?,?,?,?,?)";
 
         try (var connection = DB.getConnection(); var statement = connection.prepareStatement(query);
 
         ) {
             statement.setString(1, username);
-            statement.setString(2, firstName);
-            statement.setString(3, lastName);
-            statement.setString(4, email);
-            statement.setString(5, avatar);
-            var rs = statement.executeQuery();
+            statement.setString(2, password);
+            statement.setString(3, firstName);
+            statement.setString(4, lastName);
+            statement.setString(5, email);
+            statement.setString(6, avatar);
+            Integer rs = statement.executeUpdate();
 
+            System.out.println("User successfully added to DB!");
             System.out.println(rs);
-            while (rs.next()) {
-                var id = rs.getInt("id");
-                var returnedUsername = rs.getString("username");
-                var returnedFirstName = rs.getString("firstName");
-                var returnedLastName = rs.getString("lastName");
-                var returnedEmail = rs.getString("email");
-                var returnedAvatar = rs.getString("avatar");
 
-                var newUser = new User(id, returnedUsername, returnedFirstName, returnedLastName, returnedEmail, returnedAvatar);
-                return newUser;
-            }
+
+            return rs;
         }
-        System.out.println("Arthur may or may not of written broken code");
-        return null;
+//        System.out.println("Arthur may or may not of written broken code");
     }
 
     public static Boolean loginUser(String username, String password) throws SQLException {
@@ -136,8 +161,6 @@ public class User {
         System.out.println("Sorry, we couldn't log you in");
         return false;
     }
-
-
 
 
 }
