@@ -49,7 +49,6 @@ public class ProductRepository {
                 var product = new Product(id, name, description, price, stockQuantity, imageURL);
                 return product;
             }
-
         }
         return null;
     }
