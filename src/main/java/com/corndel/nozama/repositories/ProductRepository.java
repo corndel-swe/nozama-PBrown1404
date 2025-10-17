@@ -2,6 +2,7 @@ package com.corndel.nozama.repositories;
 
 import com.corndel.nozama.DB;
 import com.corndel.nozama.models.Product;
+import org.conscrypt.Internal;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,6 +55,12 @@ public class ProductRepository {
     }
 
 //    public Product createNewProduct(Integer id, String name, String description, Float price, Integer stockQuantity, String imageURL) throws SQLException {
+//        try ( Connection con = DB.getConnection();
+//              var query = con.prepareStatement("INSERT INTO PRODUCTS (id,name,description,price,stockQuantity,imageURL) VALUES (?,?,?,?,?,?)")){
+//
+//        }
+//        return null;
+//    }
 //        //String query = String.format("INSERT INTO PRODUCTS VALUES(%d, %2s, %3s, %4s, %5d, %6s)",id,name,description,price,stockQuantity,imageURL);
 //        String query = "INSERT INTO products (name,description,price,stockQuantity,imageURL) VALUES(?,?,?,?,?) RETURNING id";
 //        try (Connection connection = DB.getConnection();
