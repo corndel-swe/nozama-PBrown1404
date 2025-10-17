@@ -80,6 +80,7 @@ public class ProductRepository {
                 products.add(new Product(id, name, description, price, stockQuantity, imageURL));
             }
             return products;
+
         }
     }
 
