@@ -15,7 +15,14 @@ public class D2E1 {
     Javalin app = Javalin.create();
 
     // TODO: add the GET /ping endpoint
+    app.get("/ping", ctx -> {
+      ctx.result("pong");
+    });
 
     return app;
+  }
+
+  public static void main(String[] args) {
+    createApp().start(8080);
   }
 }

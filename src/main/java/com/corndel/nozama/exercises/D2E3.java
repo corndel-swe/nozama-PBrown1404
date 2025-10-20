@@ -1,5 +1,6 @@
 package com.corndel.nozama.exercises;
 
+import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 
 import java.util.List;
@@ -28,13 +29,15 @@ public class D2E3 {
     app.get(
         "/alarms",
         ctx -> {
-          // TODO
+          var alarm = AlarmRepository.findAll();
+          ctx.json(alarm);
         });
 
     app.get(
         "/alarms/{id}",
         ctx -> {
-          // TODO
+          var alarm = AlarmRepository.findById(Integer.parseInt(ctx.pathParam("id")));
+          ctx.json(alarm);
         });
 
     app.post(
